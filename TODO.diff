@@ -1,0 +1,8 @@
+- Create a simple Google Maps Activity
+- Create a grid system on the Map
+- Apply the correct camera angle
+- Draw sprites as overlays on the player location
+- Add buttons for camera control
+- Add UI controls to set shooting parameters (tilt, power, direction, etc)
+- Create a shooting system
+
