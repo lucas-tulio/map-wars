@@ -9,6 +9,7 @@ import com.google.android.gms.maps.model.LatLng;
 public class Entity {
 	
 	private CircleOptions circleOptions;
+	private Circle circle;
 	
 	public Entity(LatLng latLng) {
 
@@ -27,4 +28,13 @@ public class Entity {
 	public void setCircleOptions(CircleOptions circleOptions) {
 		this.circleOptions = circleOptions;
 	}
+
+	public Circle getCircle() {
+		return circle;
+	}
+
+	public void setCircle(Circle circle) {
+		this.circle = circle;
+	}
+	
 }
