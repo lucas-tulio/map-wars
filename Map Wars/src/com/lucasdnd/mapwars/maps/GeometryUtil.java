@@ -1,6 +1,5 @@
 package com.lucasdnd.mapwars.maps;
 
-import android.graphics.Point;
 import android.graphics.PointF;
 
 public class GeometryUtil {

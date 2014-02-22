@@ -1,16 +1,11 @@
 package com.lucasdnd.mapwars;
 
 import java.util.ArrayList;
-import java.util.Random;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
-import com.google.android.gms.maps.LocationSource.OnLocationChangedListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
@@ -19,19 +14,10 @@ import com.lucasdnd.mapwars.game.LocationUtil;
 import com.lucasdnd.mapwars.maps.GridTileProvider;
 import com.lucasdnd.mapwars.views.OnHoldDownListener;
 
-import android.location.Location;
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.view.Menu;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnGenericMotionListener;
-import android.view.View.OnHoverListener;
-import android.view.View.OnLongClickListener;
-import android.view.View.OnTouchListener;
 import android.widget.Button;
 
 public class MainActivity extends Activity implements OnCameraChangeListener {
@@ -76,10 +62,10 @@ public class MainActivity extends Activity implements OnCameraChangeListener {
 	private void setupViews() {
 		
 		Button rotateRightButton = (Button) this.findViewById(R.id.mainActivity_rotateRight);
-		rotateRightButton.setOnTouchListener(new OnHoldDownListener(map, 0.1f));
+		rotateRightButton.setOnTouchListener(new OnHoldDownListener(map, -0.1f));
 		
 		Button rotateLeftButton = (Button) this.findViewById(R.id.mainActivity_rotateLeft);
-		rotateLeftButton.setOnTouchListener(new OnHoldDownListener(map, -0.1f));
+		rotateLeftButton.setOnTouchListener(new OnHoldDownListener(map, +0.1f));
 	}
 		
 	@Override
