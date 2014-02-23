@@ -1,4 +1,4 @@
-package com.lucasdnd.mapwars.game;
+package com.lucasdnd.mapwars.maps;
 
 import android.graphics.Color;
 
@@ -6,12 +6,12 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 
-public class Entity {
+public class Enemy {
 	
 	private CircleOptions circleOptions;
 	private Circle circle;
 	
-	public Entity(LatLng latLng) {
+	public Enemy(LatLng latLng) {
 
 		circleOptions = new CircleOptions()
 			.center(latLng)

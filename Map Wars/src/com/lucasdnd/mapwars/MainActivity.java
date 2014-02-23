@@ -11,8 +11,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
-import com.lucasdnd.mapwars.game.Entity;
 import com.lucasdnd.mapwars.game.LocationUtil;
+import com.lucasdnd.mapwars.maps.Enemy;
 import com.lucasdnd.mapwars.maps.GridTileProvider;
 import com.lucasdnd.mapwars.views.OnHoldDownListener;
 
@@ -44,7 +44,7 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 	private boolean shouldClearTileOverlay = true;
 	
 	// Targets
-	private ArrayList<Entity> targets;
+	private ArrayList<Enemy> targets;
 	
 	// Control Mode. Camera mode allows map gestures
 	private boolean isCameraMode = true;
@@ -74,7 +74,7 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		map.setOnCameraChangeListener(this);
 		
 		// Targets!
-		targets = new ArrayList<Entity>();
+		targets = new ArrayList<Enemy>();
 		
 		// Setup views
 		this.setupViews();
@@ -208,7 +208,7 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		for(int i = 0; i < numTargets; i++) {
 			
 			// Create the Targets
-			Entity target = new Entity(LocationUtil.getRandomLatLng(latLng, 0.03, 0.01));
+			Enemy target = new Enemy(LocationUtil.getRandomLatLng(latLng, 0.03, 0.01));
 			target.setCircle(map.addCircle(target.getCircleOptions()));
 			targets.add(target);
 		}
