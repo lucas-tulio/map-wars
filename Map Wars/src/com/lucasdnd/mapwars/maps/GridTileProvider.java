@@ -24,7 +24,7 @@ public class GridTileProvider implements TileProvider {
 	private final int tileSize = 256;
 	
 	// Minimum zoom level to show the Tile
-	private final int minZoomLevel = 10;
+	private final int minZoomLevel = 12;
 	
 	// Current Latitude and Longitude. We need these values because the Height of each Grid in the Tiles
 	// vary according to the position on Earth.
