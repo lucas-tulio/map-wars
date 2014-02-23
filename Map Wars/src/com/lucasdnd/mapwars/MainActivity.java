@@ -52,6 +52,9 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 	// User Location
 	private Location userLocation;
 	
+	// Views
+	Button rotateRightButton, rotateLeftButton, fireButton;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -82,13 +85,13 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 	 */
 	private void setupViews() {
 		
-		Button rotateRightButton = (Button) this.findViewById(R.id.mainActivity_rotateRightButton);
+		rotateRightButton = (Button) this.findViewById(R.id.mainActivity_rotateRightButton);
 		rotateRightButton.setOnTouchListener(new OnHoldDownListener(map, +0.01f));
 		
-		Button rotateLeftButton = (Button) this.findViewById(R.id.mainActivity_rotateLeftButton);
+		rotateLeftButton = (Button) this.findViewById(R.id.mainActivity_rotateLeftButton);
 		rotateLeftButton.setOnTouchListener(new OnHoldDownListener(map, -0.01f));
 		
-		Button fireButton = (Button) this.findViewById(R.id.mainActivity_fireButton);
+		fireButton = (Button) this.findViewById(R.id.mainActivity_fireButton);
 		fireButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -111,6 +114,10 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 						
 						// Disable map gestures
 						map.getUiSettings().setAllGesturesEnabled(false);
+						
+						// Show the Targeting Buttons
+						rotateRightButton.setVisibility(View.VISIBLE);
+						rotateLeftButton.setVisibility(View.VISIBLE);
 						
 						((Button)v).setText("Click to enter Camera mode");
 						
@@ -138,6 +145,10 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 					
 					// Enable map gestures
 					map.getUiSettings().setAllGesturesEnabled(true);
+					
+					// Hide the Targeting Buttons
+					rotateRightButton.setVisibility(View.GONE);
+					rotateLeftButton.setVisibility(View.GONE);
 					
 					((Button)v).setText("Click to enter Fire mode");
 				}
