@@ -13,23 +13,23 @@
 	    <Button 
 	        android:id="@+id/mainActivity_rotateRight"
 	        android:text="Right"
-	        android:layout_width="80dp"
+	        android:layout_width="100dp"
 	        android:layout_height="80dp"
 	       	android:layout_alignParentBottom="true"
 	       	android:layout_alignParentRight="true"
 	       	android:layout_marginBottom="110dp"
-	       	android:layout_marginRight="8dp"
+	       	android:layout_marginRight="0dp"
 	        />
 	    
 	   	<Button 
 	        android:id="@+id/mainActivity_rotateLeft"
 	        android:text="Left"
-	        android:layout_width="80dp"
+	        android:layout_width="100dp"
 	        android:layout_height="80dp"
 	       	android:layout_alignParentBottom="true"
 	       	android:layout_alignParentLeft="true"
 	       	android:layout_marginBottom="110dp"
-	       	android:layout_marginLeft="8dp"
+	       	android:layout_marginLeft="0dp"
 	        />
         
     

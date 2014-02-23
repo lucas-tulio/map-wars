@@ -14,10 +14,19 @@ public class OnHoldDownListener implements OnTouchListener {
 	private GoogleMap map;
 	private float rotationAngle;
 	private Handler handler;
+	
+	private float currentAcceleration = 0f;
+	private float acceleration = 0.01f;
+	private float maxAcceleration = 5f;
 
 	public OnHoldDownListener(GoogleMap map, float rotationAngle) {
 		this.map = map;
 		this.rotationAngle = rotationAngle;
+		
+		if(rotationAngle < 0) {
+			acceleration *= -1;
+			maxAcceleration *= -1;
+		}
 	}
 	
     @Override
@@ -33,6 +42,7 @@ public class OnHoldDownListener implements OnTouchListener {
             if (handler == null) return true;
             handler.removeCallbacks(mAction);
             handler = null;
+            currentAcceleration = 0f;
             break;
         }
         return false;
@@ -45,7 +55,17 @@ public class OnHoldDownListener implements OnTouchListener {
         }
         
         private void rotate() {
-    		CameraPosition cameraPos = new CameraPosition(map.getCameraPosition().target, map.getCameraPosition().zoom, map.getCameraPosition().tilt, map.getCameraPosition().bearing - rotationAngle);
+        	
+        	if(rotationAngle > 0) {
+	        	if(currentAcceleration <= maxAcceleration) {
+	        		currentAcceleration += acceleration;
+	        	}
+        	} else {
+        		if(currentAcceleration >= maxAcceleration) {
+	        		currentAcceleration += acceleration;
+	        	}
+        	}
+    		CameraPosition cameraPos = new CameraPosition(map.getCameraPosition().target, map.getCameraPosition().zoom, map.getCameraPosition().tilt, map.getCameraPosition().bearing + rotationAngle + currentAcceleration);
     		map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
     	}
     };

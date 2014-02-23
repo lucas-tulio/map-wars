@@ -7,6 +7,7 @@ import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.lucasdnd.mapwars.game.Entity;
@@ -62,10 +63,10 @@ public class MainActivity extends Activity implements OnCameraChangeListener {
 	private void setupViews() {
 		
 		Button rotateRightButton = (Button) this.findViewById(R.id.mainActivity_rotateRight);
-		rotateRightButton.setOnTouchListener(new OnHoldDownListener(map, -0.1f));
+		rotateRightButton.setOnTouchListener(new OnHoldDownListener(map, +0.01f));
 		
 		Button rotateLeftButton = (Button) this.findViewById(R.id.mainActivity_rotateLeft);
-		rotateLeftButton.setOnTouchListener(new OnHoldDownListener(map, +0.1f));
+		rotateLeftButton.setOnTouchListener(new OnHoldDownListener(map, -0.01f));
 	}
 		
 	@Override
