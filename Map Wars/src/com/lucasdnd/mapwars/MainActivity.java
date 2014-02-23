@@ -25,6 +25,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 
 public class MainActivity extends Activity implements OnCameraChangeListener, LocationListener {
@@ -33,9 +35,21 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 	private GoogleMap map;
 	private GridTileProvider gridTileProvider;
 	private int playZoomLevel = 13;
+	private TileOverlay tileOverlay;
+	
+	// The first time the Camera zooms in the User location, the TileOverlay is drawn on the map using wrong Lat/Lng
+	// values, causing the grid to be displayed incorrectly. At the first location change, we need to clear the Tile
+	// and draw it again
+	private boolean shouldClearTileOverlay = true;
 	
 	// Targets
 	private ArrayList<Entity> targets;
+	
+	// Control Mode. Camera mode allows map gestures
+	private boolean isCameraMode = true;
+	
+	// User Location
+	private Location userLocation;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +63,7 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		gridTileProvider = new GridTileProvider(Color.argb(128,0,128,128), 1f);
 		
 		// Add the Tile Overlay to the map using our Grid Tile Provider
-		TileOverlay tileOverlay = map.addTileOverlay(new TileOverlayOptions ().tileProvider (gridTileProvider));
+		tileOverlay = map.addTileOverlay(new TileOverlayOptions ().tileProvider (gridTileProvider));
 		
 		// Add a Camera Listener. We use the Camera Listener to update the Current Location used by the Tile Provider.
 		// The Tile Provider needs an updated location to calculate the Grid heights at different Latitudes.
@@ -60,8 +74,6 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		
 		// Setup views
 		this.setupViews();
-		
-		
 	}
 
 	/**
@@ -69,11 +81,42 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 	 */
 	private void setupViews() {
 		
-		Button rotateRightButton = (Button) this.findViewById(R.id.mainActivity_rotateRight);
+		Button rotateRightButton = (Button) this.findViewById(R.id.mainActivity_rotateRightButton);
 		rotateRightButton.setOnTouchListener(new OnHoldDownListener(map, +0.01f));
 		
-		Button rotateLeftButton = (Button) this.findViewById(R.id.mainActivity_rotateLeft);
+		Button rotateLeftButton = (Button) this.findViewById(R.id.mainActivity_rotateLeftButton);
 		rotateLeftButton.setOnTouchListener(new OnHoldDownListener(map, -0.01f));
+		
+		Button fireButton = (Button) this.findViewById(R.id.mainActivity_fireButton);
+		fireButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				
+				// Switch mode
+				isCameraMode = !isCameraMode;
+				map.getUiSettings().setAllGesturesEnabled(isCameraMode);
+				
+				// Which mode?
+				if(isCameraMode) {
+					
+					// Camera Mode! Do a slight zoom out
+					CameraPosition cameraPos = new CameraPosition(new LatLng(userLocation.getLatitude(), userLocation.getLongitude()), playZoomLevel - 1, 90, map.getCameraPosition().bearing);
+					map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
+					
+					((Button)v).setText("Click to enter Fire mode");
+					
+				} else {
+					
+					// Fire Mode! Lock position!
+					CameraPosition cameraPos = new CameraPosition(new LatLng(userLocation.getLatitude(), userLocation.getLongitude()), playZoomLevel, 90, map.getCameraPosition().bearing);
+					map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
+					
+					((Button)v).setText("Click to enter Camera mode");
+				}
+			}
+			
+		});
 	}
 		
 	@Override
@@ -102,16 +145,11 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 			
 			// Enable location, disable gestures
 			map.setMyLocationEnabled(true);
-			map.getUiSettings().setAllGesturesEnabled(false);
 			
-			// Get Location Manager
+			// Request Location Updates from both GPS and Network
 			LocationManager locationManager = (LocationManager)this.getBaseContext().getSystemService(Context.LOCATION_SERVICE);
-			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000l, 100f, this);
-			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000l, 100f, this);
-			
-			// Apply max tilt
-			CameraPosition cameraPos = new CameraPosition(map.getCameraPosition().target, playZoomLevel, 90, 0);
-			map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
+			locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, null);
+			locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, null);			
 		}
 	}
 	
@@ -135,31 +173,31 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 	@Override
 	public void onCameraChange(CameraPosition position) {
 		gridTileProvider.setCurrentLatLng(map.getCameraPosition().target);
+		
+		// Clear the Tile Overlay to prevent the drawing bug
+		if(shouldClearTileOverlay) {
+			tileOverlay.clearTileCache();
+			shouldClearTileOverlay = false;
+		}
 	}
 
 	@Override
 	public void onLocationChanged(Location location) {
 		
+		// Save the User Location
+		userLocation = location;
+		
 		// Go to the User Location
-		CameraPosition cameraPos = new CameraPosition(new LatLng(location.getLatitude(), location.getLongitude()), playZoomLevel, 30, 0);
+		CameraPosition cameraPos = new CameraPosition(new LatLng(location.getLatitude(), location.getLongitude()), playZoomLevel - 1, 90, 0);
 		map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
 	}
 
 	@Override
-	public void onStatusChanged(String provider, int status, Bundle extras) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onStatusChanged(String provider, int status, Bundle extras) {}
 
 	@Override
-	public void onProviderEnabled(String provider) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onProviderEnabled(String provider) {}
 
 	@Override
-	public void onProviderDisabled(String provider) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onProviderDisabled(String provider) {}
 }
