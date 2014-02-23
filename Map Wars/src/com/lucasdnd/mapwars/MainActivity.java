@@ -2,12 +2,13 @@ package com.lucasdnd.mapwars;
 
 import java.util.ArrayList;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
+import com.google.android.gms.maps.LocationSource.OnLocationChangedListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.lucasdnd.mapwars.game.Entity;
@@ -15,17 +16,23 @@ import com.lucasdnd.mapwars.game.LocationUtil;
 import com.lucasdnd.mapwars.maps.GridTileProvider;
 import com.lucasdnd.mapwars.views.OnHoldDownListener;
 
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.view.Menu;
 import android.widget.Button;
 
-public class MainActivity extends Activity implements OnCameraChangeListener {
+public class MainActivity extends Activity implements OnCameraChangeListener, LocationListener {
 
 	// Map
 	private GoogleMap map;
 	private GridTileProvider gridTileProvider;
+	private int playZoomLevel = 13;
 	
 	// Targets
 	private ArrayList<Entity> targets;
@@ -93,9 +100,18 @@ public class MainActivity extends Activity implements OnCameraChangeListener {
 				return;
 			}
 			
-			// Enable location, disable tilt
+			// Enable location, disable gestures
 			map.setMyLocationEnabled(true);
+			map.getUiSettings().setAllGesturesEnabled(false);
 			
+			// Get Location Manager
+			LocationManager locationManager = (LocationManager)this.getBaseContext().getSystemService(Context.LOCATION_SERVICE);
+			locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000l, 100f, this);
+			locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000l, 100f, this);
+			
+			// Apply max tilt
+			CameraPosition cameraPos = new CameraPosition(map.getCameraPosition().target, playZoomLevel, 90, 0);
+			map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
 		}
 	}
 	
@@ -119,5 +135,31 @@ public class MainActivity extends Activity implements OnCameraChangeListener {
 	@Override
 	public void onCameraChange(CameraPosition position) {
 		gridTileProvider.setCurrentLatLng(map.getCameraPosition().target);
+	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+		
+		// Go to the User Location
+		CameraPosition cameraPos = new CameraPosition(new LatLng(location.getLatitude(), location.getLongitude()), playZoomLevel, 30, 0);
+		map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
+	}
+
+	@Override
+	public void onStatusChanged(String provider, int status, Bundle extras) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onProviderEnabled(String provider) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onProviderDisabled(String provider) {
+		// TODO Auto-generated method stub
+		
 	}
 }
