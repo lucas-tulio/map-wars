@@ -34,14 +34,26 @@
 	       	android:visibility="gone"
 	        />
 	   	
+	   	
    		<Button 
-	        android:id="@+id/mainActivity_fireButton"
+	        android:id="@+id/mainActivity_changeModeButton"
 	        android:text="Click to enter fire mode"
-	        android:layout_width="200dp"
+	        android:layout_width="160dp"
 	        android:layout_height="80dp"
 	       	android:layout_alignParentBottom="true"
 	       	android:layout_centerHorizontal="true"
 	       	android:layout_marginBottom="10dp"
+	        />
+   		
+   		
+	   	<Button 
+	        android:id="@+id/mainActivity_fireButton"
+	        android:text="FIRE!"
+	        android:layout_width="160dp"
+	        android:layout_height="80dp"
+	       	android:layout_centerHorizontal="true"
+	       	android:layout_above="@+id/mainActivity_changeModeButton"
+	       	android:visibility="gone"
 	        />
         
     

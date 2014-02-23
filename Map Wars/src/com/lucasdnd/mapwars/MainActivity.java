@@ -55,7 +55,7 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 	private Location userLocation;
 	
 	// Views
-	Button rotateRightButton, rotateLeftButton, fireButton;
+	Button rotateRightButton, rotateLeftButton, changeModeButton, fireButton;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +99,16 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 			@Override
 			public void onClick(View v) {
 				
+			}
+			
+		});
+		
+		changeModeButton = (Button) this.findViewById(R.id.mainActivity_changeModeButton);
+		changeModeButton.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				
 				// Which mode?
 				if(isCameraMode) {
 					
@@ -107,22 +117,7 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 					// Do we have the User Location?
 					if(userLocation != null) {
 						
-						// Fire Mode!
-						isCameraMode = false;
-						
-						// Lock Position!
-						CameraPosition cameraPos = new CameraPosition(new LatLng(userLocation.getLatitude(), userLocation.getLongitude()), playZoomLevel, 90, map.getCameraPosition().bearing);
-						map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
-						
-						// Disable map gestures
-						map.getUiSettings().setAllGesturesEnabled(false);
-						
-						// Show the Targeting stuff
-						rotateRightButton.setVisibility(View.VISIBLE);
-						rotateLeftButton.setVisibility(View.VISIBLE);
-						target.getMarker().setVisible(true);
-						
-						((Button)v).setText("Click to enter Camera mode");
+						enterTargetMode();
 						
 					} else {
 						
@@ -139,25 +134,9 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 					
 				} else {
 					
-					// Camera Mode!
-					isCameraMode = true;
-					
-					// Do a slight zoom out
-					CameraPosition cameraPos = new CameraPosition(new LatLng(map.getCameraPosition().target.latitude, map.getCameraPosition().target.longitude), playZoomLevel - 1, 90, map.getCameraPosition().bearing);
-					map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
-					
-					// Enable map gestures
-					map.getUiSettings().setAllGesturesEnabled(true);
-					
-					// Hide the Targeting stuff
-					rotateRightButton.setVisibility(View.GONE);
-					rotateLeftButton.setVisibility(View.GONE);
-					target.getMarker().setVisible(false);
-					
-					((Button)v).setText("Click to enter Fire mode");
+					enterCameraMode();
 				}
 			}
-			
 		});
 	}
 		
@@ -189,6 +168,54 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 			map.setMyLocationEnabled(true);
 			this.requestLocations();
 		}
+	}
+	
+	/**
+	 * Enter Camera Mode
+	 */
+	private void enterCameraMode() {
+		
+		// Camera Mode!
+		isCameraMode = true;
+		
+		// Do a slight zoom out
+		CameraPosition cameraPos = new CameraPosition(new LatLng(map.getCameraPosition().target.latitude, map.getCameraPosition().target.longitude), playZoomLevel - 1, 90, map.getCameraPosition().bearing);
+		map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
+		
+		// Enable map gestures
+		map.getUiSettings().setAllGesturesEnabled(true);
+		
+		// Hide the Targeting stuff
+		rotateRightButton.setVisibility(View.GONE);
+		rotateLeftButton.setVisibility(View.GONE);
+		fireButton.setVisibility(View.GONE);
+		target.getMarker().setVisible(false);
+		
+		changeModeButton.setText("Click to enter Fire mode");
+	}
+	
+	/**
+	 * Enter Targeting Mode
+	 */
+	private void enterTargetMode() {
+		
+		// Fire Mode!
+		isCameraMode = false;
+		
+		// Lock Position!
+		CameraPosition cameraPos = new CameraPosition(new LatLng(userLocation.getLatitude(), userLocation.getLongitude()), playZoomLevel, 90, map.getCameraPosition().bearing);
+		map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
+		
+		// Disable map gestures
+		map.getUiSettings().setAllGesturesEnabled(false);
+		
+		// Show the Targeting stuff
+		rotateRightButton.setVisibility(View.VISIBLE);
+		rotateLeftButton.setVisibility(View.VISIBLE);
+		fireButton.setVisibility(View.VISIBLE);
+		target.getMarker().setVisible(true);
+		
+		changeModeButton.setText("Click to enter Camera mode");
 	}
 	
 	/**
