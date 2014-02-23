@@ -48,13 +48,16 @@
    		
 	   	<Button 
 	        android:id="@+id/mainActivity_fireButton"
-	        android:text="FIRE!"
+	        android:text="fire?"
 	        android:layout_width="160dp"
 	        android:layout_height="80dp"
 	       	android:layout_centerHorizontal="true"
-	       	android:layout_above="@+id/mainActivity_changeModeButton"
+	       	android:layout_alignParentBottom="true"
+	       	android:layout_marginBottom="100dp"
 	       	android:visibility="gone"
 	        />
+	   	
+	   	
         
     
 </RelativeLayout>

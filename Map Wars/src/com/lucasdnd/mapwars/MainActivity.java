@@ -49,7 +49,10 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 	private Target target;
 	
 	// Control Mode. Camera mode allows map gestures
-	private boolean isCameraMode = true;
+	private int currentMode = 0;
+	private final int CAMERA_MODE = 0;
+	private final int TARGET_MODE = 1;
+	private final int FIRE_MODE = 2;
 	
 	// User Location
 	private Location userLocation;
@@ -99,6 +102,21 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 			@Override
 			public void onClick(View v) {
 				
+				if(currentMode == TARGET_MODE) {
+					
+					enterFireMode();
+					
+				} else if(currentMode == FIRE_MODE) {
+					
+					// Show an alert saying we need the User Location
+					new AlertDialog.Builder(v.getContext())
+						.setMessage("BOOM HEADSHOT")
+						.create()
+						.show();
+					
+					// Go back to Target Mode
+					enterTargetMode();
+				}
 			}
 			
 		});
@@ -110,9 +128,7 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 			public void onClick(View v) {
 				
 				// Which mode?
-				if(isCameraMode) {
-					
-					// Trying to enter Fire Mode
+				if(currentMode == CAMERA_MODE) {
 					
 					// Do we have the User Location?
 					if(userLocation != null) {
@@ -171,12 +187,26 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 	}
 	
 	/**
+	 * Enter Fire Mode
+	 */
+	private void enterFireMode() {
+		
+		currentMode = FIRE_MODE;
+		
+		fireButton.setText("FIRE!");
+		changeModeButton.setVisibility(View.GONE);
+		rotateLeftButton.setVisibility(View.GONE);
+		rotateRightButton.setVisibility(View.GONE);
+		
+	}
+	
+	/**
 	 * Enter Camera Mode
 	 */
 	private void enterCameraMode() {
 		
 		// Camera Mode!
-		isCameraMode = true;
+		currentMode = CAMERA_MODE;
 		
 		// Do a slight zoom out
 		CameraPosition cameraPos = new CameraPosition(new LatLng(map.getCameraPosition().target.latitude, map.getCameraPosition().target.longitude), playZoomLevel - 1, 90, map.getCameraPosition().bearing);
@@ -185,7 +215,8 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		// Enable map gestures
 		map.getUiSettings().setAllGesturesEnabled(true);
 		
-		// Hide the Targeting stuff
+		// Hide the Targeting stuffs
+		changeModeButton.setVisibility(View.VISIBLE);
 		rotateRightButton.setVisibility(View.GONE);
 		rotateLeftButton.setVisibility(View.GONE);
 		fireButton.setVisibility(View.GONE);
@@ -199,8 +230,8 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 	 */
 	private void enterTargetMode() {
 		
-		// Fire Mode!
-		isCameraMode = false;
+		// Target Mode!
+		currentMode = TARGET_MODE;
 		
 		// Lock Position!
 		CameraPosition cameraPos = new CameraPosition(new LatLng(userLocation.getLatitude(), userLocation.getLongitude()), playZoomLevel, 90, map.getCameraPosition().bearing);
@@ -210,12 +241,14 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		map.getUiSettings().setAllGesturesEnabled(false);
 		
 		// Show the Targeting stuff
+		changeModeButton.setVisibility(View.VISIBLE);
 		rotateRightButton.setVisibility(View.VISIBLE);
 		rotateLeftButton.setVisibility(View.VISIBLE);
 		fireButton.setVisibility(View.VISIBLE);
 		target.getMarker().setVisible(true);
 		
 		changeModeButton.setText("Click to enter Camera mode");
+		fireButton.setText("fire?");
 	}
 	
 	/**
