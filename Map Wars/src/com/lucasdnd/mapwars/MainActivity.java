@@ -22,6 +22,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.Menu;
@@ -93,26 +94,52 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 			@Override
 			public void onClick(View v) {
 				
-				// Switch mode
-				isCameraMode = !isCameraMode;
-				map.getUiSettings().setAllGesturesEnabled(isCameraMode);
-				
 				// Which mode?
 				if(isCameraMode) {
 					
-					// Camera Mode! Do a slight zoom out
-					CameraPosition cameraPos = new CameraPosition(new LatLng(userLocation.getLatitude(), userLocation.getLongitude()), playZoomLevel - 1, 90, map.getCameraPosition().bearing);
-					map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
+					// Trying to enter Fire Mode
 					
-					((Button)v).setText("Click to enter Fire mode");
+					// Do we have the User Location?
+					if(userLocation != null) {
+						
+						// Fire Mode!
+						isCameraMode = false;
+						
+						// Lock Position!
+						CameraPosition cameraPos = new CameraPosition(new LatLng(userLocation.getLatitude(), userLocation.getLongitude()), playZoomLevel, 90, map.getCameraPosition().bearing);
+						map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
+						
+						// Disable map gestures
+						map.getUiSettings().setAllGesturesEnabled(false);
+						
+						((Button)v).setText("Click to enter Camera mode");
+						
+					} else {
+						
+						// Request location again
+						requestLocations();
+						
+						// Show an alert saying we need the User Location
+						new AlertDialog.Builder(v.getContext())
+							.setTitle("Location Services")
+							.setMessage("Need location to enter Fire mode")
+							.create()
+							.show();
+					}
 					
 				} else {
 					
-					// Fire Mode! Lock position!
-					CameraPosition cameraPos = new CameraPosition(new LatLng(userLocation.getLatitude(), userLocation.getLongitude()), playZoomLevel, 90, map.getCameraPosition().bearing);
+					// Camera Mode!
+					isCameraMode = true;
+					
+					// Do a slight zoom out
+					CameraPosition cameraPos = new CameraPosition(new LatLng(map.getCameraPosition().target.latitude, map.getCameraPosition().target.longitude), playZoomLevel - 1, 90, map.getCameraPosition().bearing);
 					map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
 					
-					((Button)v).setText("Click to enter Camera mode");
+					// Enable map gestures
+					map.getUiSettings().setAllGesturesEnabled(true);
+					
+					((Button)v).setText("Click to enter Fire mode");
 				}
 			}
 			
@@ -143,15 +170,21 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 				return;
 			}
 			
-			// Enable location, disable gestures
+			// Enable location
 			map.setMyLocationEnabled(true);
-			
-			// Request Location Updates from both GPS and Network
-			LocationManager locationManager = (LocationManager)this.getBaseContext().getSystemService(Context.LOCATION_SERVICE);
-			locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, null);
-			locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, null);			
+			this.requestLocations();
 		}
 	}
+	
+	/**
+	 * Request a single location update from both GPS and Network
+	 */
+	private void requestLocations() {
+		LocationManager locationManager = (LocationManager)this.getBaseContext().getSystemService(Context.LOCATION_SERVICE);
+		locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, null);
+		locationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, null);
+	}
+	
 	
 	/**
 	 * Creates targets around the user
@@ -172,13 +205,15 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 
 	@Override
 	public void onCameraChange(CameraPosition position) {
+		
+		// Tell the TileOverlay where we are
 		gridTileProvider.setCurrentLatLng(map.getCameraPosition().target);
 		
-		// Clear the Tile Overlay to prevent the drawing bug
-		if(shouldClearTileOverlay) {
-			tileOverlay.clearTileCache();
-			shouldClearTileOverlay = false;
-		}
+//		// Clear the Tile Overlay to prevent the drawing bug
+//		if(shouldClearTileOverlay) {
+//			tileOverlay.clearTileCache();
+//			shouldClearTileOverlay = false;
+//		}
 	}
 
 	@Override
