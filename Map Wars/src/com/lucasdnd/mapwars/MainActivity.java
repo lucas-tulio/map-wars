@@ -14,6 +14,7 @@ import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.lucasdnd.mapwars.game.LocationUtil;
 import com.lucasdnd.mapwars.maps.Enemy;
 import com.lucasdnd.mapwars.maps.GridTileProvider;
+import com.lucasdnd.mapwars.maps.Target;
 import com.lucasdnd.mapwars.views.OnHoldDownListener;
 
 import android.location.Criteria;
@@ -43,8 +44,9 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 	// and draw it again
 	private boolean shouldClearTileOverlay = true;
 	
-	// Targets
-	private ArrayList<Enemy> targets;
+	// Enemies
+	private ArrayList<Enemy> enemies;
+	private Target target;
 	
 	// Control Mode. Camera mode allows map gestures
 	private boolean isCameraMode = true;
@@ -73,8 +75,8 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		// The Tile Provider needs an updated location to calculate the Grid heights at different Latitudes.
 		map.setOnCameraChangeListener(this);
 		
-		// Targets!
-		targets = new ArrayList<Enemy>();
+		// Enemies!
+		enemies = new ArrayList<Enemy>();
 		
 		// Setup views
 		this.setupViews();
@@ -115,9 +117,10 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 						// Disable map gestures
 						map.getUiSettings().setAllGesturesEnabled(false);
 						
-						// Show the Targeting Buttons
+						// Show the Targeting stuff
 						rotateRightButton.setVisibility(View.VISIBLE);
 						rotateLeftButton.setVisibility(View.VISIBLE);
+						target.getMarker().setVisible(true);
 						
 						((Button)v).setText("Click to enter Camera mode");
 						
@@ -146,9 +149,10 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 					// Enable map gestures
 					map.getUiSettings().setAllGesturesEnabled(true);
 					
-					// Hide the Targeting Buttons
+					// Hide the Targeting stuff
 					rotateRightButton.setVisibility(View.GONE);
 					rotateLeftButton.setVisibility(View.GONE);
+					target.getMarker().setVisible(false);
 					
 					((Button)v).setText("Click to enter Fire mode");
 				}
@@ -210,7 +214,7 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 			// Create the Targets
 			Enemy target = new Enemy(LocationUtil.getRandomLatLng(latLng, 0.03, 0.01));
 			target.setCircle(map.addCircle(target.getCircleOptions()));
-			targets.add(target);
+			enemies.add(target);
 		}
 	}
 
@@ -218,13 +222,7 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 	public void onCameraChange(CameraPosition position) {
 		
 		// Tell the TileOverlay where we are
-		gridTileProvider.setCurrentLatLng(map.getCameraPosition().target);
-		
-//		// Clear the Tile Overlay to prevent the drawing bug
-//		if(shouldClearTileOverlay) {
-//			tileOverlay.clearTileCache();
-//			shouldClearTileOverlay = false;
-//		}
+		gridTileProvider.setCurrentLatLng(map.getCameraPosition().target);		
 	}
 
 	@Override
@@ -236,6 +234,10 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		// Go to the User Location
 		CameraPosition cameraPos = new CameraPosition(new LatLng(location.getLatitude(), location.getLongitude()), playZoomLevel - 1, 90, 0);
 		map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
+		
+		// Add the Target there
+		target = new Target(userLocation);
+		target.setMarker(map.addMarker(target.getMarkerOptions()));
 	}
 
 	@Override

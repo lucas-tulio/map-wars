@@ -1,37 +1,41 @@
 package com.lucasdnd.mapwars.maps;
 
+import android.location.Location;
+
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
 
 public class Target {
 	
-	private Polygon target;
-	private PolygonOptions targetOptions;
+	private Marker marker;
+	private MarkerOptions markerOptions;
 	
-	public Target(LatLng userLocation) {
+	public Target(Location userLocation) {
 		
 		// Create the polygon
-		targetOptions = new PolygonOptions()
-        .add(new LatLng(userLocation.latitude + 0.005, userLocation.longitude),
-             new LatLng(userLocation.latitude+ 0.015, userLocation.longitude+ 0.005),
-             new LatLng(userLocation.latitude+ 0.025, userLocation.longitude+ 0.0012),
-             new LatLng(userLocation.latitude+ 0.035, userLocation.longitude+ 0.0018));
+		markerOptions = new MarkerOptions()
+			.position(new LatLng(userLocation.getLatitude(), userLocation.getLongitude()))
+			.title("aeaeae")
+			.visible(false);
 	}
 
-	public Polygon getTarget() {
-		return target;
+	public Marker getMarker() {
+		return marker;
 	}
 
-	public void setTarget(Polygon target) {
-		this.target = target;
+	public void setMarker(Marker marker) {
+		this.marker = marker;
 	}
 
-	public PolygonOptions getTargetOptions() {
-		return targetOptions;
+	public MarkerOptions getMarkerOptions() {
+		return markerOptions;
 	}
 
-	public void setTargetOptions(PolygonOptions targetOptions) {
-		this.targetOptions = targetOptions;
+	public void setMarkerOptions(MarkerOptions markerOptions) {
+		this.markerOptions = markerOptions;
 	}
+
 }
