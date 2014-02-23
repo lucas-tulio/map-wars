@@ -11,7 +11,7 @@
 	        android:name="com.google.android.gms.maps.MapFragment" />
     
 	    <Button 
-	        android:id="@+id/mainActivity_rotateRight"
+	        android:id="@+id/mainActivity_rotateRightButton"
 	        android:text="Right"
 	        android:layout_width="100dp"
 	        android:layout_height="80dp"
@@ -22,7 +22,7 @@
 	        />
 	    
 	   	<Button 
-	        android:id="@+id/mainActivity_rotateLeft"
+	        android:id="@+id/mainActivity_rotateLeftButton"
 	        android:text="Left"
 	        android:layout_width="100dp"
 	        android:layout_height="80dp"
@@ -30,6 +30,16 @@
 	       	android:layout_alignParentLeft="true"
 	       	android:layout_marginBottom="110dp"
 	       	android:layout_marginLeft="0dp"
+	        />
+	   	
+   		<Button 
+	        android:id="@+id/mainActivity_fireButton"
+	        android:text="Click to enter fire mode"
+	        android:layout_width="200dp"
+	        android:layout_height="80dp"
+	       	android:layout_alignParentBottom="true"
+	       	android:layout_centerHorizontal="true"
+	       	android:layout_marginBottom="10dp"
 	        />
         
     
