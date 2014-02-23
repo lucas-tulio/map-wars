@@ -49,7 +49,9 @@ public class OnHoldDownListener implements OnTouchListener {
     }
 
     Runnable mAction = new Runnable() {
-        @Override public void run() {
+    	
+        @Override
+        public void run() {
             this.rotate();
             handler.postDelayed(this, 10);
         }
