@@ -4,7 +4,7 @@ import java.util.Random;
 
 import com.google.android.gms.maps.model.LatLng;
 
-public class LocationUtil {
+public class LocationRandomizer {
 	
 	public static LatLng getRandomLatLng(LatLng currentLocation, double random, double min) {
 		
