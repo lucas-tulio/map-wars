@@ -205,6 +205,7 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		changeModeButton.setVisibility(View.GONE);
 		rotateLeftButton.setVisibility(View.GONE);
 		rotateRightButton.setVisibility(View.GONE);
+		fireBar.setBackgroundColor(Color.argb(255, 255, 0, 0));
 		fireBar.setVisibility(View.VISIBLE);
 		fireBarBackground.setVisibility(View.VISIBLE);
 		
@@ -260,6 +261,7 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		rotateLeftButton.setVisibility(View.VISIBLE);
 		fireButton.setVisibility(View.VISIBLE);
 		target.getMarker().setVisible(true);
+		fireBar.setBackgroundColor(Color.argb(0, 0, 0, 0));
 		fireBar.setVisibility(View.GONE);
 		fireBarBackground.setVisibility(View.GONE);
 		

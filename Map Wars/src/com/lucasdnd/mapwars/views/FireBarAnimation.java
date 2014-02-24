@@ -1,7 +1,9 @@
 package com.lucasdnd.mapwars.views;
 
+import android.R.interpolator;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.Transformation;
 import android.view.animation.Animation.AnimationListener;
 
@@ -31,6 +33,7 @@ public class FireBarAnimation extends Animation implements AnimationListener {
 	     // Reverse
 	     this.setRepeatMode(Animation.REVERSE);
 	     this.setRepeatCount(Animation.INFINITE);
+	     this.setInterpolator(new LinearInterpolator());
 	 }
 
 	 @Override
