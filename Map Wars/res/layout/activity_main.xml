@@ -88,7 +88,7 @@
 	   	    android:layout_marginBottom="160dp"
 	   	    android:layout_alignParentRight="true"
 	   	    android:layout_alignParentBottom="true"
-	   	    android:visibility="visible" />
+	   	    android:visibility="gone" />
 	   	<View
 	   	    android:id="@+id/mainActivity_fireBarMarker2"
 	   	    android:background="#000000"
@@ -98,7 +98,7 @@
 	   	    android:layout_marginBottom="220dp"
 	   	    android:layout_alignParentRight="true"
 	   	    android:layout_alignParentBottom="true"
-	   	    android:visibility="visible" />
+	   	    android:visibility="gone" />
 	   	<View
 	   	    android:id="@+id/mainActivity_fireBarMarker3"
 	   	    android:background="#000000"
@@ -108,7 +108,7 @@
 	   	    android:layout_marginBottom="280dp"
 	   	    android:layout_alignParentRight="true"
 	   	    android:layout_alignParentBottom="true"
-	   	    android:visibility="visible" />
+	   	    android:visibility="gone" />
 	   	<View
 	   	    android:id="@+id/mainActivity_fireBarMarker4"
 	   	    android:background="#000000"
@@ -118,6 +118,6 @@
 	   	    android:layout_marginBottom="340dp"
 	   	    android:layout_alignParentRight="true"
 	   	    android:layout_alignParentBottom="true"
-	   	    android:visibility="visible" />
+	   	    android:visibility="gone" />
     
 </RelativeLayout>
