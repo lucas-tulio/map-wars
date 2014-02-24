@@ -1,13 +1,19 @@
 Map Wars
 ========
 
-Android artillery game played on a Google Maps board.
+Map Wars is an Android artillery game played on a Google Maps board. Your current location is used as your base, from where you'll be able to shoot targets around you in a 5km range.
+
+Use the Left and Right buttons on the map to target. An oscilating power bar is used to pick the right amount of power in a shot. Hit "Fire" at the right time to get the desired amount of power.
 
 TODO list can be found in the TODO.diff file.
 
-# Project Setup
+![screenshot](https://raw.github.com/lucasdnd/map-wars/master/map-wars-1.png)
 
-## Preparing the Environment
+![screenshot](https://raw.github.com/lucasdnd/map-wars/master/map-wars-2.png)
+
+## Project Setup
+
+### Preparing the Environment
 
 In this step, we're going to download and setup Android Development Tools and some essential packages.
 
@@ -21,7 +27,7 @@ In this step, we're going to download and setup Android Development Tools and so
 
 5. Select and install the **Google Play Services** package. It's located inside Extras -> Google Play services.
 
-## Importing Google Play Services into your workspace
+### Importing Google Play Services into your workspace
 
 Since the project depends on Google Play Services, you need to import it into your workspace and reference it in the project. If you already have the Google Play Services in your workspace, then you can skip these steps.
 
@@ -31,7 +37,7 @@ Since the project depends on Google Play Services, you need to import it into yo
 
 3. Click finish. The Google Play Services project will be created inside your workspace.
 
-## Installing the Map Wars project
+### Installing the Map Wars project
 
 1. Git clone or otherwise download the Map Wars repository into your computer.
 
@@ -41,7 +47,7 @@ Since the project depends on Google Play Services, you need to import it into yo
 
 4. Click "Finish".
 
-## Referencing Google Play Services in the project
+### Referencing Google Play Services in the project
 
 The Map Wars project needs to know where the Google Play Services library is. To do that, follow these steps:
 
@@ -60,7 +66,7 @@ The Map Wars project needs to know where the Google Play Services library is. To
 In git, you can run:
     git update-index --assume-unchanged Map\ Wars/project.properties
 
-## Setting up the Maps API
+### Setting up the Maps API
 
 Map Wars runs on Google Maps. To make Google Maps work, you need at least a debug API key. To get one, follow the steps below:
 
@@ -88,7 +94,7 @@ XX:XX:XX:...:XX:XX;com.lucasdnd.mapwars
 
 10. In the "Credentials" page, Google will now give you an API key. Copy it.
 
-## Entering the API Key in the Project
+### Entering the API Key in the Project
 
 1. In ADT, create a new file in <map-wars-base-dir>/Map Wars/res/values named "api-keys.xml".
 
