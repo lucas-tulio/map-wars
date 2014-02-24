@@ -1,5 +1,7 @@
 package com.lucasdnd.mapwars.maps;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import android.graphics.PointF;
 
 public class GeometryUtil {
@@ -26,14 +28,39 @@ public class GeometryUtil {
 		          Math.cos(lon2-lon1)) * EARTH_RADIUS);
 	}
 	
-	public static double degreesToRadians(double angle)
-	{
+	/**
+	 * Given a LatLng source, calculate the LatLng after moving range kms in that bearing
+	 * @param source
+	 * @param range
+	 * @param bearing
+	 * @return
+	 */
+	public static LatLng getLatLngFromDistance(LatLng source, double rangeInMeters, double bearing) {
+		
+	    double latA = degreesToRadians(source.latitude);
+	    double lonA = degreesToRadians(source.longitude);
+	    double angularDistance = rangeInMeters / EARTH_RADIUS;
+	    double trueCourse = degreesToRadians(bearing);
+
+	    double lat = Math.asin(
+	        Math.sin(latA) * Math.cos(angularDistance) + 
+	        Math.cos(latA) * Math.sin(angularDistance) * Math.cos(trueCourse));
+
+	    double dlon = Math.atan2(
+	        Math.sin(trueCourse) * Math.sin(angularDistance) * Math.cos(latA), 
+	        Math.cos(angularDistance) - Math.sin(latA) * Math.sin(lat));
+
+	    double lon = ((lonA + dlon + Math.PI) % (Math.PI*2)) - Math.PI;
+
+	    return new LatLng(
+	        radiansToDegrees(lat), 
+	        radiansToDegrees(lon));
+	}
+	
+	public static double degreesToRadians(double angle) {
 		return Math.PI * angle / 180.0;
 	}
-	public static double radiansToDegrees(double angle)
-	{
+	public static double radiansToDegrees(double angle) {
 		return angle * (180.0 / Math.PI);
 	}
-	
-	
 }
