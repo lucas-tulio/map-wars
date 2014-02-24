@@ -11,10 +11,11 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
-import com.lucasdnd.mapwars.game.LocationUtil;
+import com.lucasdnd.mapwars.game.LocationRandomizer;
 import com.lucasdnd.mapwars.maps.Enemy;
 import com.lucasdnd.mapwars.maps.GridTileProvider;
 import com.lucasdnd.mapwars.maps.Target;
+import com.lucasdnd.mapwars.views.FireBarAnimation;
 import com.lucasdnd.mapwars.views.OnHoldDownListener;
 
 import android.location.Criteria;
@@ -29,7 +30,11 @@ import android.graphics.Color;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 
 public class MainActivity extends Activity implements OnCameraChangeListener, LocationListener {
 
@@ -37,12 +42,6 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 	private GoogleMap map;
 	private GridTileProvider gridTileProvider;
 	private int playZoomLevel = 13;
-	private TileOverlay tileOverlay;
-	
-	// The first time the Camera zooms in the User location, the TileOverlay is drawn on the map using wrong Lat/Lng
-	// values, causing the grid to be displayed incorrectly. At the first location change, we need to clear the Tile
-	// and draw it again
-	private boolean shouldClearTileOverlay = true;
 	
 	// Enemies
 	private ArrayList<Enemy> enemies;
@@ -58,7 +57,9 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 	private Location userLocation;
 	
 	// Views
-	Button rotateRightButton, rotateLeftButton, changeModeButton, fireButton;
+	private Button rotateRightButton, rotateLeftButton, changeModeButton, fireButton;
+	private View fireBar, fireBarBackground;
+	private FireBarAnimation fireBarAnimation;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +73,7 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		gridTileProvider = new GridTileProvider(Color.argb(128,0,128,128), 1f);
 		
 		// Add the Tile Overlay to the map using our Grid Tile Provider
-		tileOverlay = map.addTileOverlay(new TileOverlayOptions ().tileProvider (gridTileProvider));
+		map.addTileOverlay(new TileOverlayOptions ().tileProvider (gridTileProvider));
 		
 		// Add a Camera Listener. We use the Camera Listener to update the Current Location used by the Tile Provider.
 		// The Tile Provider needs an updated location to calculate the Grid heights at different Latitudes.
@@ -95,6 +96,13 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		
 		rotateLeftButton = (Button) this.findViewById(R.id.mainActivity_rotateLeftButton);
 		rotateLeftButton.setOnTouchListener(new OnHoldDownListener(map, -0.01f));
+		
+		fireBar = (View) this.findViewById(R.id.mainActivity_fireBar);
+		fireBarAnimation = new FireBarAnimation(fireBar, 600);
+		fireBarAnimation.setDuration(2000);
+		fireBar.setAnimation(fireBarAnimation);
+		
+		fireBarBackground = (View) this.findViewById(R.id.mainActivity_fireBarBackground);
 		
 		fireButton = (Button) this.findViewById(R.id.mainActivity_fireButton);
 		fireButton.setOnClickListener(new OnClickListener() {
@@ -197,7 +205,11 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		changeModeButton.setVisibility(View.GONE);
 		rotateLeftButton.setVisibility(View.GONE);
 		rotateRightButton.setVisibility(View.GONE);
+		fireBar.setVisibility(View.VISIBLE);
+		fireBarBackground.setVisibility(View.VISIBLE);
 		
+		// Animate the Fire Bar
+		fireBarAnimation.start();
 	}
 	
 	/**
@@ -221,6 +233,8 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		rotateLeftButton.setVisibility(View.GONE);
 		fireButton.setVisibility(View.GONE);
 		target.getMarker().setVisible(false);
+		fireBar.setVisibility(View.GONE);
+		fireBarBackground.setVisibility(View.GONE);
 		
 		changeModeButton.setText("Click to enter Fire mode");
 	}
@@ -246,6 +260,8 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		rotateLeftButton.setVisibility(View.VISIBLE);
 		fireButton.setVisibility(View.VISIBLE);
 		target.getMarker().setVisible(true);
+		fireBar.setVisibility(View.GONE);
+		fireBarBackground.setVisibility(View.GONE);
 		
 		changeModeButton.setText("Click to enter Camera mode");
 		fireButton.setText("fire?");
@@ -272,7 +288,7 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		for(int i = 0; i < numTargets; i++) {
 			
 			// Create the Targets
-			Enemy target = new Enemy(LocationUtil.getRandomLatLng(latLng, 0.03, 0.01));
+			Enemy target = new Enemy(LocationRandomizer.getRandomLatLng(latLng, 0.03, 0.01));
 			target.setCircle(map.addCircle(target.getCircleOptions()));
 			enemies.add(target);
 		}

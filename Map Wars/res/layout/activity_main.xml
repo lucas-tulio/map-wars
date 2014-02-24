@@ -57,6 +57,29 @@
 	       	android:visibility="gone"
 	        />
 	   	
+	   	<View
+	   	    android:id="@+id/mainActivity_fireBarBackground"
+	   	    android:background="#FFFFFF"
+	   	    android:layout_width="40dp"
+	   	    android:layout_height="300dp"
+	   	    android:layout_marginRight="11dp"
+	   	    android:layout_marginBottom="100dp"
+	   	    android:layout_alignParentRight="true"
+	   	    android:layout_alignParentBottom="true"
+	   	    android:visibility="gone" />
+	   	
+	   	<View
+	   	    android:id="@+id/mainActivity_fireBar"
+	   	    android:background="#FF0000"
+	   	    android:layout_width="40dp"
+	   	    android:layout_height="0dp"
+	   	    android:layout_marginRight="11dp"
+	   	    android:layout_marginBottom="100dp"
+	   	    android:layout_alignParentRight="true"
+	   	    android:layout_alignParentBottom="true"
+	   	    android:visibility="gone" />
+	   	
+	   	
 	   	
         
     
