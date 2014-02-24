@@ -60,6 +60,7 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 	private Button rotateRightButton, rotateLeftButton, changeModeButton, fireButton;
 	private View fireBar, fireBarBackground;
 	private FireBarAnimation fireBarAnimation;
+	private View marker1, marker2, marker3, marker4;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +92,11 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 	 */
 	private void setupViews() {
 		
+		marker1 = (View) this.findViewById(R.id.mainActivity_fireBarMarker1);
+		marker2 = (View) this.findViewById(R.id.mainActivity_fireBarMarker2);
+		marker3 = (View) this.findViewById(R.id.mainActivity_fireBarMarker3);
+		marker4 = (View) this.findViewById(R.id.mainActivity_fireBarMarker4);
+		
 		rotateRightButton = (Button) this.findViewById(R.id.mainActivity_rotateRightButton);
 		rotateRightButton.setOnTouchListener(new OnHoldDownListener(map, +0.01f));
 		
@@ -116,11 +122,8 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 					
 				} else if(currentMode == FIRE_MODE) {
 					
-					// Show an alert saying we need the User Location
-					new AlertDialog.Builder(v.getContext())
-						.setMessage("BOOM HEADSHOT")
-						.create()
-						.show();
+					// Shoot!
+					shoot();
 					
 					// Go back to Target Mode
 					enterTargetMode();
@@ -195,6 +198,22 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 	}
 	
 	/**
+	 * Shoot!
+	 */
+	private void shoot() {
+		
+		// Get the firepower
+		float firepower = fireBar.getLayoutParams().height;
+		
+		// Get the direction
+		
+		
+		// Place a Circle there
+		
+		
+	}
+	
+	/**
 	 * Enter Fire Mode
 	 */
 	private void enterFireMode() {
@@ -208,6 +227,10 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		fireBar.setBackgroundColor(Color.argb(255, 255, 0, 0));
 		fireBar.setVisibility(View.VISIBLE);
 		fireBarBackground.setVisibility(View.VISIBLE);
+		marker1.setVisibility(View.VISIBLE);
+		marker2.setVisibility(View.VISIBLE);
+		marker3.setVisibility(View.VISIBLE);
+		marker4.setVisibility(View.VISIBLE);
 		
 		// Animate the Fire Bar
 		fireBarAnimation.start();
@@ -236,6 +259,10 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		target.getMarker().setVisible(false);
 		fireBar.setVisibility(View.GONE);
 		fireBarBackground.setVisibility(View.GONE);
+		marker1.setVisibility(View.GONE);
+		marker2.setVisibility(View.GONE);
+		marker3.setVisibility(View.GONE);
+		marker4.setVisibility(View.GONE);
 		
 		changeModeButton.setText("Click to enter Fire mode");
 	}
@@ -264,6 +291,10 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		fireBar.setBackgroundColor(Color.argb(0, 0, 0, 0));
 		fireBar.setVisibility(View.GONE);
 		fireBarBackground.setVisibility(View.GONE);
+		marker1.setVisibility(View.GONE);
+		marker2.setVisibility(View.GONE);
+		marker3.setVisibility(View.GONE);
+		marker4.setVisibility(View.GONE);
 		
 		changeModeButton.setText("Click to enter Camera mode");
 		fireButton.setText("fire?");
