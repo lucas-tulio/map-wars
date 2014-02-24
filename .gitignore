@@ -27,9 +27,6 @@ proguard/
 *.iws
 .idea/
 
-# API Keys file
-api-keys.xml
-
 # Modified version of the Eclipse.gitignore found in https://github.com/github/gitignore/blob/master/Global/Eclipse.gitignore
 
 *.pydevproject
