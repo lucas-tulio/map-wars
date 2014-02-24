@@ -9,10 +9,12 @@ import com.google.android.gms.maps.LocationSource.OnLocationChangedListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.lucasdnd.mapwars.game.LocationRandomizer;
 import com.lucasdnd.mapwars.maps.Enemy;
+import com.lucasdnd.mapwars.maps.GeometryUtil;
 import com.lucasdnd.mapwars.maps.GridTileProvider;
 import com.lucasdnd.mapwars.maps.Target;
 import com.lucasdnd.mapwars.views.FireBarAnimation;
@@ -203,12 +205,17 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 	private void shoot() {
 		
 		// Get the firepower
-		float firepower = fireBar.getLayoutParams().height;
+		int maxRange = 5000; // weapon max range
+		int maxBarHeight = 600;
+		float firepower = (fireBar.getLayoutParams().height * maxRange) / maxBarHeight;
 		
-		// Get the direction
+		// Place a marker there
+		LatLng impactPoint = GeometryUtil.getLatLngFromDistance(
+				new LatLng(userLocation.getLatitude(), userLocation.getLongitude()),
+				firepower,
+				map.getCameraPosition().bearing);
 		
-		
-		// Place a Circle there
+		map.addMarker(new MarkerOptions().position(impactPoint).visible(true));
 		
 		
 	}
