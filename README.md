@@ -64,7 +64,9 @@ The Map Wars project needs to know where the Google Play Services library is. To
 6. This action will make Eclipse modify the <map-wars-base-dir>/Map Wars/project.properties file. Google advises for keeping this file in version control systems, but this is a change that should not have to be commited, as it'll have a different value on each computer. If you're using a version control system, **untrack the project.properties file to avoid generating unecessary commits**.
 
 In git, you can run:
+````
     git update-index --assume-unchanged Map\ Wars/project.properties
+````
 
 ### Setting up the Maps API
 
@@ -100,10 +102,12 @@ XX:XX:XX:...:XX:XX;com.lucasdnd.mapwars
 
 2. In the "api-keys.xml" file, enter the following content:
 
+````
     <?xml version="1.0" encoding="UTF-8"?>
     <resources>
         <string name="GoogleMapsKey">GOOGLE_MAPS_API_KEY_HERE</string>
     </resources>
+````
 
 3. Replace the string "GOOGLE_MAPS_API_KEY_HERE" with the API Key provided by Google in step 10 of the previous section.
 
