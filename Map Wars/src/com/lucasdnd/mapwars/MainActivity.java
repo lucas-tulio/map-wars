@@ -12,11 +12,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.lucasdnd.mapwars.game.MapCircle;
 import com.lucasdnd.mapwars.game.LocationRandomizer;
-import com.lucasdnd.mapwars.maps.Enemy;
 import com.lucasdnd.mapwars.maps.GeometryUtil;
 import com.lucasdnd.mapwars.maps.GridTileProvider;
-import com.lucasdnd.mapwars.maps.Target;
 import com.lucasdnd.mapwars.views.FireBarAnimation;
 import com.lucasdnd.mapwars.views.OnHoldDownListener;
 
@@ -46,8 +45,7 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 	private int playZoomLevel = 13;
 	
 	// Enemies
-	private ArrayList<Enemy> enemies;
-	private Target target;
+	private ArrayList<MapCircle> enemies;
 	
 	// Control Mode. Camera mode allows map gestures
 	private int currentMode = 0;
@@ -83,10 +81,18 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		map.setOnCameraChangeListener(this);
 		
 		// Enemies!
-		enemies = new ArrayList<Enemy>();
+		enemies = new ArrayList<MapCircle>();
 		
 		// Setup views
 		this.setupViews();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		// Request locations again
+		this.requestLocations();
 	}
 
 	/**
@@ -193,9 +199,8 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 				return;
 			}
 			
-			// Enable location
+			// Enable My Location
 			map.setMyLocationEnabled(true);
-			this.requestLocations();
 		}
 	}
 	
@@ -209,15 +214,14 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		int maxBarHeight = 600;
 		float firepower = (fireBar.getLayoutParams().height * maxRange) / maxBarHeight;
 		
-		// Place a marker there
+		// Create a marker
 		LatLng impactPoint = GeometryUtil.getLatLngFromDistance(
 				new LatLng(userLocation.getLatitude(), userLocation.getLongitude()),
 				firepower,
 				map.getCameraPosition().bearing);
 		
+		// Add it!
 		map.addMarker(new MarkerOptions().position(impactPoint).visible(true));
-		
-		
 	}
 	
 	/**
@@ -263,7 +267,6 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		rotateRightButton.setVisibility(View.GONE);
 		rotateLeftButton.setVisibility(View.GONE);
 		fireButton.setVisibility(View.GONE);
-		target.getMarker().setVisible(false);
 		fireBar.setVisibility(View.GONE);
 		fireBarBackground.setVisibility(View.GONE);
 		marker1.setVisibility(View.GONE);
@@ -294,7 +297,6 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		rotateRightButton.setVisibility(View.VISIBLE);
 		rotateLeftButton.setVisibility(View.VISIBLE);
 		fireButton.setVisibility(View.VISIBLE);
-		target.getMarker().setVisible(true);
 		fireBar.setBackgroundColor(Color.argb(0, 0, 0, 0));
 		fireBar.setVisibility(View.GONE);
 		fireBarBackground.setVisibility(View.GONE);
@@ -328,7 +330,7 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		for(int i = 0; i < numTargets; i++) {
 			
 			// Create the Targets
-			Enemy target = new Enemy(LocationRandomizer.getRandomLatLng(latLng, 0.03, 0.01));
+			MapCircle target = new MapCircle(LocationRandomizer.getRandomLatLng(latLng, 0.03, 0.01), 200.0);
 			target.setCircle(map.addCircle(target.getCircleOptions()));
 			enemies.add(target);
 		}
@@ -350,10 +352,6 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		// Go to the User Location
 		CameraPosition cameraPos = new CameraPosition(new LatLng(location.getLatitude(), location.getLongitude()), playZoomLevel - 1, 90, 0);
 		map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
-		
-		// Add the Target there
-		target = new Target(userLocation);
-		target.setMarker(map.addMarker(target.getMarkerOptions()));
 	}
 
 	@Override
