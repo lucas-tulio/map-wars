@@ -86,6 +86,7 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		
 		// Setup views
 		this.setupViews();
+		
 	}
 	
 	@Override
@@ -216,12 +217,16 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		int maxBarHeight = 600;
 		float firepower = (fireBar.getLayoutParams().height * maxRange) / maxBarHeight;
 
-		// Add it!
+		// Create the Explosion Circle
 		MapCircle explosion = new MapCircle(
 				GeometryUtil.getLatLngFromDistance(new LatLng(userLocation.getLatitude(), userLocation.getLongitude()),
-						firepower, map.getCameraPosition().bearing), explosionRadius);
+						firepower, map.getCameraPosition().bearing), explosionRadius, Color.argb(255, 255, 128, 0));
 		
+		// Add it to the Map!
 		map.addCircle(explosion.getCircleOptions());
+		
+		// Check if it collided with an Enemy
+		
 	}
 	
 	/**
@@ -325,12 +330,12 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 	 * @param numTargets
 	 * @param distance
 	 */
-	private void createTargets(LatLng latLng, int numTargets) {
+	private void createTargets(LatLng userLatLng, int numTargets) {
 		
 		for(int i = 0; i < numTargets; i++) {
 			
 			// Create the Targets
-			MapCircle target = new MapCircle(LocationRandomizer.getRandomLatLng(latLng, 0.03, 0.01), 200.0);
+			MapCircle target = new MapCircle(LocationRandomizer.getRandomLatLng(userLatLng, 0.03, 0.01), 150.0, Color.argb(0, 128, 255, 0));
 			target.setCircle(map.addCircle(target.getCircleOptions()));
 			enemies.add(target);
 		}
@@ -352,6 +357,9 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		// Go to the User Location
 		CameraPosition cameraPos = new CameraPosition(new LatLng(location.getLatitude(), location.getLongitude()), playZoomLevel - 1, 90, 0);
 		map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
+		
+		// Create targets now that we know the user location
+		this.createTargets(new LatLng(location.getLatitude(), location.getLongitude()), 10);
 	}
 
 	@Override

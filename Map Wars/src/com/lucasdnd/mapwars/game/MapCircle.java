@@ -11,13 +11,13 @@ public class MapCircle {
 	private CircleOptions circleOptions;
 	private Circle circle;
 	
-	public MapCircle(LatLng latLng, double radius) {
+	public MapCircle(LatLng latLng, double radius, int fillColor) {
 		
 		circleOptions = new CircleOptions()
 			.center(latLng)
 			.radius(radius)
 			.strokeColor(Color.BLACK)
-			.fillColor(Color.argb(255, 255, 128, 0))
+			.fillColor(fillColor)
 			.strokeWidth(1f);
 	}
 
