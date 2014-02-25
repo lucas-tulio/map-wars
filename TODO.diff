@@ -5,6 +5,7 @@
 + Add buttons for camera control
 + Add UI controls to set shooting parameters (tilt, power, direction, etc)
 + Create a shooting system
+- Request the player position again when entering fire mode
 - Show targets around the player
 - Draw a circle overlay on the impact point
 - Check if the shot collided with a target
