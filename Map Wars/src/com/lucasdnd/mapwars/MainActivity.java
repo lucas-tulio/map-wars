@@ -24,6 +24,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.R.integer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -211,17 +212,16 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		
 		// Get the firepower
 		int maxRange = 5000; // weapon max range
+		double explosionRadius = 250.0;
 		int maxBarHeight = 600;
 		float firepower = (fireBar.getLayoutParams().height * maxRange) / maxBarHeight;
-		
-		// Create a marker
-		LatLng impactPoint = GeometryUtil.getLatLngFromDistance(
-				new LatLng(userLocation.getLatitude(), userLocation.getLongitude()),
-				firepower,
-				map.getCameraPosition().bearing);
-		
+
 		// Add it!
-		map.addMarker(new MarkerOptions().position(impactPoint).visible(true));
+		MapCircle explosion = new MapCircle(
+				GeometryUtil.getLatLngFromDistance(new LatLng(userLocation.getLatitude(), userLocation.getLongitude()),
+						firepower, map.getCameraPosition().bearing), explosionRadius);
+		
+		map.addCircle(explosion.getCircleOptions());
 	}
 	
 	/**
