@@ -194,7 +194,7 @@ public class GridTileProvider implements TileProvider {
 	
 	private double toLatitude(double mercator) {
 		double radians = Math.atan(Math.exp(GeometryUtil.degreesToRadians(mercator)));
-		return GeometryUtil.radiansToDegrees(2 * radians) - 90;
+		return GeometryUtil.radiansToDegrees(2.0 * radians) - 90.0;
 	}
 	
 	/**
@@ -206,22 +206,22 @@ public class GridTileProvider implements TileProvider {
 		
 		// Calculate the distance form the Equator Line (latitude 0º) to the top left point of the grid
 		// (southwest long, northeast lat). This result is given in Meters
-		float distanceFromEquatorToTile = 0f;
+		double distanceFromEquatorToTile = 0f;
 
 		// Above or Below the Equator Line?
 		if (boundsOfTile.southwest.latitude >= 0f) {
 			
 			// Above!
 			distanceFromEquatorToTile = GeometryUtil.getDistanceInMetersAtLatLng(
-				new PointF ((float)boundsOfTile.northeast.longitude, 0f),
-				new PointF ((float)boundsOfTile.northeast.longitude, (float)boundsOfTile.southwest.latitude));
+				0.0,								boundsOfTile.northeast.longitude,
+				boundsOfTile.southwest.latitude,	boundsOfTile.northeast.longitude);
 			
 		} else {
 			
 			// Below!
 			distanceFromEquatorToTile = GeometryUtil.getDistanceInMetersAtLatLng(
-				new PointF ((float)boundsOfTile.southwest.longitude, 0f),
-				new PointF ((float)boundsOfTile.southwest.longitude, (float)boundsOfTile.northeast.latitude));
+				0.0,								boundsOfTile.southwest.longitude,
+				boundsOfTile.northeast.latitude,	boundsOfTile.southwest.longitude);
 		}
 		
 		// Get the remaining Meters and convert them into pixels
