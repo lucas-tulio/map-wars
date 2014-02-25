@@ -1,6 +1,5 @@
 package com.lucasdnd.mapwars.views;
 
-import android.R.interpolator;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
@@ -10,25 +9,18 @@ import android.view.animation.Animation.AnimationListener;
 public class FireBarAnimation extends Animation implements AnimationListener {
 
 	private View view;
-	private int originalStartingHeight;
-	private int originalEndingHeight;
-	
-	private int oldHeight;
-	private int newHeight;
+	private int startingHeight;
 	private int diff;
 	
-	 public FireBarAnimation(View view, int newHeight) {
+	 public FireBarAnimation(View view, int finalHeight) {
 		 
 		 // Basic stuff
 		 this.setAnimationListener(this);
 		 this.view = view;
-	     this.oldHeight = view.getLayoutParams().height;
-	     this.newHeight = newHeight;
-	     diff = newHeight - oldHeight;
+	     diff = finalHeight - startingHeight;
 	     
-	     // Save the Original heights so we can restart the animation
-	     originalStartingHeight = view.getLayoutParams().height;
-	     originalEndingHeight = newHeight;
+	     // Save the Original height
+	     startingHeight = view.getLayoutParams().height;
 	     
 	     // Reverse
 	     this.setRepeatMode(Animation.REVERSE);
@@ -38,7 +30,7 @@ public class FireBarAnimation extends Animation implements AnimationListener {
 
 	 @Override
 	 protected void applyTransformation(float interpolatedTime, Transformation t) {
-	     view.getLayoutParams().height = oldHeight + (int)(diff * interpolatedTime);
+	     view.getLayoutParams().height = startingHeight + (int)(diff * interpolatedTime);
 	     view.requestLayout();
 	 }
 
@@ -57,8 +49,6 @@ public class FireBarAnimation extends Animation implements AnimationListener {
 
 	@Override
 	public void onAnimationEnd(Animation animation) {
-		oldHeight = originalStartingHeight;
-		newHeight = originalEndingHeight;
 	}
 
 	@Override
