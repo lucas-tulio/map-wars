@@ -74,7 +74,9 @@ Map Wars runs on Google Maps. To make Google Maps work, you need at least a debu
 
 1. Open your terminal and enter the following command:
 
+````
     keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
+````
 
 2. In the output, copy the SHA1 hash. We'll use it later.
 
