@@ -100,7 +100,7 @@ XX:XX:XX:...:XX:XX;com.lucasdnd.mapwars
 
 ### Entering the API Key in the Project
 
-1. In ADT, create a new file in <map-wars-base-dir>/Map Wars/res/values named "api-keys.xml".
+1. In ADT, create a new file in <map-wars-base-dir>/Map Wars/res/values named "api-keys.xml". This file is gitignored, so you don't have to worry about accidentally commiting it.
 
 2. In the "api-keys.xml" file, enter the following content:
 
@@ -113,6 +113,4 @@ XX:XX:XX:...:XX:XX;com.lucasdnd.mapwars
 
 3. Replace the string "GOOGLE_MAPS_API_KEY_HERE" with the API Key provided by Google in step 10 of the previous section.
 
-4. This file is gitignored, so you don't have to worry about accidentally commiting it.
-
-5. Run the Project.
+4. Run the Project.
