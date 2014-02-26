@@ -9,12 +9,20 @@ public class GeometryUtil {
 	public static final double	EARTH_CIRCUMFERENCE		= 2.0 * Math.PI * EARTH_RADIUS;
 	public static final double	GRID_SIZE_IN_METERS		= 1000.0;
 	public static final double	GRID_SIZE_IN_DEGREES	= GRID_SIZE_IN_METERS / (EARTH_CIRCUMFERENCE / 360.0);
-	
-	// Returns the distance between two latitudes
-	//
-	// Spherical law of cosines:
-	// d = acos( sin(φ1).sin(φ2) + cos(φ1).cos(φ2).cos(Δλ) ).R
-	public static double getDistanceInMetersAtLatLng(double lat1, double lng1, double lat2, double lng2){
+
+	/**
+	 * Returns the distance, in meters, between two latitudes
+	 * 
+	 * Spherical law of cosines:
+	 * d = acos( sin(φ1).sin(φ2) + cos(φ1).cos(φ2).cos(Δλ) ).R
+	 * 
+	 * @param lat1
+	 * @param lng1
+	 * @param lat2
+	 * @param lng2
+	 * @return
+	 */
+	public static double getDistanceInMeters(double lat1, double lng1, double lat2, double lng2) {
 		
 		lat1 = degreesToRadians(lat1);
 		lng1 = degreesToRadians(lng1);
@@ -27,17 +35,18 @@ public class GeometryUtil {
 	}
 	
 	/**
-	 * Given a LatLng source, calculate the LatLng after moving range kms in that bearing
+	 * Given a LatLng source, calculate the new LatLng after moving distanceInMeters in that bearing
+	 * 
 	 * @param source
 	 * @param range
 	 * @param bearing
 	 * @return
 	 */
-	public static LatLng getLatLngFromDistance(LatLng source, double rangeInMeters, double bearing) {
+	public static LatLng getLatLngAwayFromSource(LatLng source, double distanceInMeters, double bearing) {
 		
 	    double latA = degreesToRadians(source.latitude);
 	    double lonA = degreesToRadians(source.longitude);
-	    double angularDistance = rangeInMeters / EARTH_RADIUS;
+	    double angularDistance = distanceInMeters / EARTH_RADIUS;
 	    double trueCourse = degreesToRadians(bearing);
 
 	    double lat = Math.asin(
