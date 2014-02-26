@@ -212,14 +212,14 @@ public class GridTileProvider implements TileProvider {
 		if (boundsOfTile.southwest.latitude >= 0f) {
 			
 			// Above!
-			distanceFromEquatorToTile = GeometryUtil.getDistanceInMetersAtLatLng(
+			distanceFromEquatorToTile = GeometryUtil.getDistanceInMeters(
 				0.0,								boundsOfTile.northeast.longitude,
 				boundsOfTile.southwest.latitude,	boundsOfTile.northeast.longitude);
 			
 		} else {
 			
 			// Below!
-			distanceFromEquatorToTile = GeometryUtil.getDistanceInMetersAtLatLng(
+			distanceFromEquatorToTile = GeometryUtil.getDistanceInMeters(
 				0.0,								boundsOfTile.southwest.longitude,
 				boundsOfTile.northeast.latitude,	boundsOfTile.southwest.longitude);
 		}
