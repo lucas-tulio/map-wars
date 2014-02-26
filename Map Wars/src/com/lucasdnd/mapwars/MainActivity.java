@@ -12,6 +12,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.lucasdnd.mapwars.game.CollisionChecker;
 import com.lucasdnd.mapwars.game.MapCircle;
 import com.lucasdnd.mapwars.game.LocationRandomizer;
 import com.lucasdnd.mapwars.maps.GeometryUtil;
@@ -46,7 +47,7 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 	private int playZoomLevel = 13;
 	
 	// Enemies
-	private ArrayList<MapCircle> enemies;
+	private ArrayList<MapCircle> targets;
 	
 	// Control Mode. Camera mode allows map gestures
 	private int currentMode = 0;
@@ -82,7 +83,7 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		map.setOnCameraChangeListener(this);
 		
 		// Enemies!
-		enemies = new ArrayList<MapCircle>();
+		targets = new ArrayList<MapCircle>();
 		
 		// Setup views
 		this.setupViews();
@@ -219,14 +220,33 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 
 		// Create the Explosion Circle
 		MapCircle explosion = new MapCircle(
-				GeometryUtil.getLatLngFromDistance(new LatLng(userLocation.getLatitude(), userLocation.getLongitude()),
+				GeometryUtil.getLatLngAwayFromSource(new LatLng(userLocation.getLatitude(), userLocation.getLongitude()),
 						firepower, map.getCameraPosition().bearing), explosionRadius, Color.argb(255, 255, 128, 0));
 		
 		// Add it to the Map!
-		map.addCircle(explosion.getCircleOptions());
+		explosion.setCircle(map.addCircle(explosion.getCircleOptions()));
 		
 		// Check if it collided with an Enemy
+		CollisionChecker.checkCollision(explosion.getCircle(), targets);
 		
+		// Remove the ones who got hit and check if we won
+		boolean win = true;
+		for(MapCircle target : targets) {
+			if(target.gotHit()) {
+				target.getCircle().remove();
+			} else {
+				win = false;
+			}
+		}
+		
+		// Check if we won
+		if(win) {
+			rotateLeftButton.setBackgroundColor(Color.rgb(255, 0, 0));
+			rotateLeftButton.setText("YOU");
+			
+			rotateRightButton.setBackgroundColor(Color.rgb(255, 0, 0));
+			rotateRightButton.setText("WIN");
+		}
 	}
 	
 	/**
@@ -335,9 +355,9 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		for(int i = 0; i < numTargets; i++) {
 			
 			// Create the Targets
-			MapCircle target = new MapCircle(LocationRandomizer.getRandomLatLng(userLatLng, 0.03, 0.01), 150.0, Color.argb(255, 0, 128, 255));
+			MapCircle target = new MapCircle(LocationRandomizer.getRandomLatLng(userLatLng, 0.02, 0.01), 150.0, Color.argb(255, 0, 128, 255));
 			target.setCircle(map.addCircle(target.getCircleOptions()));
-			enemies.add(target);
+			targets.add(target);
 		}
 	}
 
@@ -359,7 +379,7 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPos));
 		
 		// Create targets now that we know the user location
-		this.createTargets(new LatLng(location.getLatitude(), location.getLongitude()), 10);
+		this.createTargets(new LatLng(location.getLatitude(), location.getLongitude()), 5);
 	}
 
 	@Override

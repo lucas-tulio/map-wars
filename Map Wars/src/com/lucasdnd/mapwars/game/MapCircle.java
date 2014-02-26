@@ -10,6 +10,7 @@ public class MapCircle {
 	
 	private CircleOptions circleOptions;
 	private Circle circle;
+	private boolean gotHit;
 	
 	public MapCircle(LatLng latLng, double radius, int fillColor) {
 		
@@ -19,6 +20,14 @@ public class MapCircle {
 			.strokeColor(Color.BLACK)
 			.fillColor(fillColor)
 			.strokeWidth(1f);
+	}
+
+	public boolean gotHit() {
+		return gotHit;
+	}
+
+	public void setGotHit(boolean gotHit) {
+		this.gotHit = gotHit;
 	}
 
 	public CircleOptions getCircleOptions() {
@@ -36,5 +45,4 @@ public class MapCircle {
 	public void setCircle(Circle circle) {
 		this.circle = circle;
 	}
-	
 }
