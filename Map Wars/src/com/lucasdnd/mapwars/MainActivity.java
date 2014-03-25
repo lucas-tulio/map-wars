@@ -355,7 +355,7 @@ public class MainActivity extends Activity implements OnCameraChangeListener, Lo
 		for(int i = 0; i < numTargets; i++) {
 			
 			// Create the Targets
-			MapCircle target = new MapCircle(LocationRandomizer.getRandomLatLng(userLatLng, 0.02, 0.01), 150.0, Color.argb(255, 0, 128, 255));
+			MapCircle target = new MapCircle(LocationRandomizer.getRandomLatLng(userLatLng, 5000.0, 1000.0), 150.0, Color.argb(255, 0, 128, 255));
 			target.setCircle(map.addCircle(target.getCircleOptions()));
 			targets.add(target);
 		}
