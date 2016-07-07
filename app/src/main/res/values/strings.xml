@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Map Wars</string>
+    <string name="action_settings">Hue</string>
+    <string name="GoogleMapsKey"></string>
+</resources>
